@@ -11,6 +11,23 @@ openssl rsa -noout -modulus -in private.key | openssl sha256 -c
 35:55:d1:ef:ea:35:65:83:ed:35:80:32:1d:d1:b0:bc:87:5f:2d:2e:0b:43:55:d8:3b:e5:ec:d1:a3:2e:a3:dd
 ```
 
+### Extract private key or certificate from PCKS12
+
+```shell
+# Get private key from PKCS12 file
+openssl pkcs12 -in certificate.p12 -out private.key -nodes -nocerts
+# Get certificate from PKCS12 file
+openssl pkcs12 -in certificate.p12 -out certificate.crt -nodes -nokeys
+```
+
+## Private keys
+
+### Get Public Key from Private Key
+
+```shell
+openssl rsa -in private.key -pubout -out public.key
+```
+
 ## Process Management That Actually Works
 
 ```shell
