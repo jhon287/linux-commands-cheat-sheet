@@ -5,10 +5,31 @@
 ### Check that private key matches the certificate
 
 ```shell
+# Certificate
 openssl x509 -noout -modulus -in certificate.crt | openssl sha256 -c
 35:55:d1:ef:ea:35:65:83:ed:35:80:32:1d:d1:b0:bc:87:5f:2d:2e:0b:43:55:d8:3b:e5:ec:d1:a3:2e:a3:dd
+
+# Private Key
 openssl rsa -noout -modulus -in private.key | openssl sha256 -c
 35:55:d1:ef:ea:35:65:83:ed:35:80:32:1d:d1:b0:bc:87:5f:2d:2e:0b:43:55:d8:3b:e5:ec:d1:a3:2e:a3:dd
+```
+
+```shell
+function private_key_matches_certificate() {
+  if [[ -z "$1" || -z "$2" ]]; then
+    echo "Usage: private_key_matches_certificate <PRIVATE_KEY_FILE> <CERTIFICATE_FILE>"
+    return 1
+  fi
+  
+  PK=$(openssl rsa -in "$1" -noout -modulus | openssl sha256)
+  CRT=$(openssl x509 -in "$2" -noout -modulus | openssl sha256)
+  
+  if [[ "${PK}" == "${CRT}" ]]; then
+    echo "[👍] Private key and certificate match."
+  else
+    echo "[👎] Private key and certificate do not match."
+  fi
+}
 ```
 
 ### Extract private key or certificate from PCKS12
@@ -18,6 +39,12 @@ openssl rsa -noout -modulus -in private.key | openssl sha256 -c
 openssl pkcs12 -in certificate.p12 -out private.key -nodes -nocerts
 # Get certificate from PKCS12 file
 openssl pkcs12 -in certificate.p12 -out certificate.crt -nodes -nokeys
+```
+
+### Display certificate interesting details
+
+```shell
+openssl x509 -in certificate.crt -inform PEM -noout -subject -issuer -dates
 ```
 
 ## Private keys
