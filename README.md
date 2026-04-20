@@ -41,6 +41,18 @@ openssl pkcs12 -in certificate.p12 -out private.key -nodes -nocerts
 openssl pkcs12 -in certificate.p12 -out certificate.crt -nodes -nokeys
 ```
 
+### Create PCKS12 file from private key and certificate
+
+```shell
+openssl pkcs12 -export -out certificate.p12 -inkey private.key -in certificate.crt -name myalias
+```
+
+### Import PCKS12 file to Java Keystore (PKCS12 format)
+
+```shell
+keytool -importkeystore -deststoretype PKCS12 -destkeystore keystore.p12 -srckeystore certificate.p12 -srcstoretype PKCS12 -alias myalias
+```
+
 ### Display certificate interesting details
 
 ```shell
